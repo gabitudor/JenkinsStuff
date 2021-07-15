@@ -10,6 +10,9 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
@@ -25,20 +28,39 @@ public class BaseTest {
 	
 	WebDriver driver;
 	public HomePage homePage;
-
+	String browser = System.getProperty("browser");
 	//@Parameters({"url"})
 	@BeforeClass
 	public void setup() throws IOException {
 		//System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
 		
-		//DesiredCapabilities cap; -->Este deprecated
+		//DesiredCapabilities cap; -->Deprecated
 		
+		//ChromeOptions
 		ChromeOptions options =new ChromeOptions();
-		
 		options.addArguments("stat-maximized");
 		options.addArguments("--headless");
 		
-		driver = new ChromeDriver(options);
+		//Firefox options
+		FirefoxBinary firefoxBinary =new FirefoxBinary();
+		firefoxBinary.addCommandLineOptions("--headless");
+		FirefoxOptions firefoxOPTIONS = new FirefoxOptions();
+		firefoxOPTIONS.setBinary(firefoxBinary);
+		
+		if(browser != "" & browser !=null) {
+			if(browser.equalsIgnoreCase("chrome")) {
+				driver =new ChromeDriver(options);
+				driver.manage().window().maximize();
+			}
+			else if(browser.equalsIgnoreCase("firefox")) {
+				driver =new FirefoxDriver (firefoxOPTIONS);
+			}
+		}
+		else {
+			driver =new ChromeDriver(options);
+			driver.manage().window().maximize();
+		}
+		//driver = new ChromeDriver(options);
 		//maximize the window
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10000, TimeUnit.MILLISECONDS);
