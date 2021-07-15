@@ -8,11 +8,14 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 
+import com.beust.jcommander.Parameters;
 import com.google.common.io.Files;
 
 import pages.HomePage;
@@ -26,7 +29,15 @@ public class BaseTest {
 	@BeforeClass
 	public void setup() throws IOException {
 		//System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
-		driver = new ChromeDriver();
+		
+		//DesiredCapabilities cap; -->Este deprecated
+		
+		ChromeOptions options =new ChromeOptions();
+		
+		options.addArguments("stat-maximized");
+		options.addArguments("--headless");
+		
+		driver = new ChromeDriver(options);
 		//maximize the window
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10000, TimeUnit.MILLISECONDS);
